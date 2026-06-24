@@ -18,6 +18,51 @@ export const runtime = "nodejs";
 
 const MODEL = process.env.CDCP_CHAT_MODEL || "claude-haiku-4-5-20251001";
 
+// Bound the upstream call so a slow/hung API can't tie up the handler; the catch below then
+// degrades to button-only mode.
+const ANTHROPIC_TIMEOUT_MS = 8000;
+
+/**
+ * Minimal in-process rate limiter (fixed window per IP). This is a basic abuse/cost guard only —
+ * it's per-instance, so a production deployment behind multiple instances should front this route
+ * with distributed limiting (e.g. a Redis/KV token bucket) and a hard budget alarm on the API key.
+ */
+const RATE_LIMIT = 20; // requests
+const RATE_WINDOW_MS = 60_000; // per minute, per IP
+const hits = new Map<string, { count: number; resetAt: number }>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = hits.get(ip);
+  if (!entry || now > entry.resetAt) {
+    hits.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    if (hits.size > 5000) {
+      // Opportunistic cleanup so the map can't grow unbounded.
+      for (const [k, v] of hits) if (now > v.resetAt) hits.delete(k);
+    }
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > RATE_LIMIT;
+}
+
+function clientIp(req: Request): string {
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return req.headers.get("x-real-ip") || "unknown";
+}
+
+/** Reject obvious cross-site abuse: if an Origin is sent, its host must match the request host. */
+function sameOrigin(req: Request): boolean {
+  const origin = req.headers.get("origin");
+  if (!origin) return true; // same-origin fetches and server-side calls may omit Origin
+  try {
+    return new URL(origin).host === req.headers.get("host");
+  } catch {
+    return false;
+  }
+}
+
 const GROUNDING = `You are the eligibility assistant for an independent guide to the Canadian Dental Care Plan (CDCP). Facts you may rely on:
 - Four requirements, all needed: (1) Canadian resident for tax purposes; (2) filed last year's tax return (spouse/common-law partner too); (3) adjusted family net income under $90,000; (4) no ACCESS to private dental insurance.
 - "Access" to insurance = employer/pension/group/student/purchased coverage, own or a family member's, even if declined. Coverage through a GOVERNMENT social program does NOT count.
@@ -56,6 +101,13 @@ export async function POST(req: Request) {
     return Response.json({ type: "unavailable" });
   }
 
+  if (!sameOrigin(req)) {
+    return Response.json({ type: "error", text: "Forbidden." }, { status: 403 });
+  }
+  if (rateLimited(clientIp(req))) {
+    return Response.json({ type: "error", text: "Too many requests." }, { status: 429 });
+  }
+
   let body: { text?: string; step?: StepId; locale?: string };
   try {
     body = await req.json();
@@ -85,12 +137,15 @@ Reply in ${locale === "fr" ? "French (Canadian)" : "English"}. Keep "reply" unde
 
   try {
     const client = new Anthropic({ apiKey });
-    const msg = await client.messages.create({
-      model: MODEL,
-      max_tokens: 300,
-      system,
-      messages: [{ role: "user", content: text }],
-    });
+    const msg = await client.messages.create(
+      {
+        model: MODEL,
+        max_tokens: 300,
+        system,
+        messages: [{ role: "user", content: text }],
+      },
+      { timeout: ANTHROPIC_TIMEOUT_MS, maxRetries: 1 }
+    );
 
     const raw = msg.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")

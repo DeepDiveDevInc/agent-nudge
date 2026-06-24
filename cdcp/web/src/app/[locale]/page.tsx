@@ -5,6 +5,7 @@ import JsonLd from "@/components/JsonLd";
 import { getDictionary, localePath, isLocale, type Locale } from "@/lib/i18n";
 import { GUIDES, getGuideContent, CLUSTER_LABELS } from "@/lib/content";
 
+/** Localized home page: hero + eligibility chat, how-it-works, co-pay tiers, dentist CTA, guides. */
 export default function Home({ params }: { params: { locale: string } }) {
   const locale = (isLocale(params.locale) ? params.locale : "en") as Locale;
   const d = getDictionary(locale);
@@ -13,7 +14,7 @@ export default function Home({ params }: { params: { locale: string } }) {
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: GUIDES.slice(0, 6).map((g) => {
+    mainEntity: featured.map((g) => {
       const { content } = getGuideContent(g, locale);
       return {
         "@type": "Question",

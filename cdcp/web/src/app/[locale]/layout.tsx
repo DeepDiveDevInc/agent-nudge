@@ -8,7 +8,17 @@ import { LOCALES, HREFLANG, isLocale, getDictionary, type Locale } from "@/lib/i
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://cdcpguide.ca";
+const FALLBACK_SITE_URL = "https://cdcpguide.ca";
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL).replace(/\/+$/, "");
+
+/** Parse SITE_URL safely so a malformed env var can't crash metadata generation. */
+function getMetadataBase(raw: string): URL {
+  try {
+    return new URL(raw);
+  } catch {
+    return new URL(FALLBACK_SITE_URL);
+  }
+}
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -22,7 +32,7 @@ export async function generateMetadata({
   const locale = (isLocale(params.locale) ? params.locale : "en") as Locale;
   const d = getDictionary(locale);
   return {
-    metadataBase: new URL(SITE_URL),
+    metadataBase: getMetadataBase(SITE_URL),
     title: {
       default: `${d.meta.siteName} — ${d.hero.titleHi}`,
       template: `%s · ${d.meta.siteName}`,
@@ -37,6 +47,7 @@ export async function generateMetadata({
   };
 }
 
+/** Root layout for a locale: sets <html lang>, loads fonts, and wraps pages in header/footer chrome. */
 export default function LocaleLayout({
   children,
   params,

@@ -285,7 +285,7 @@
         ],
         function () {
           textPrompt("e.g. Calgary or T2P 1J9", function (val) {
-            addMsg(val, "user");
+            addMsg(escapeHtml(val), "user");
             botSay(
               [
                 "Thanks! In the live version I'd show dentists near <strong>" +
@@ -353,7 +353,7 @@
         return;
       }
       clearInput();
-      addMsg(v, "user");
+      addMsg(escapeHtml(v), "user");
       botSay(
         [
           "✓ Perfect — you're all set. (This is a prototype, so nothing is actually stored or sent yet.)",

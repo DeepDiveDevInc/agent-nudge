@@ -15,6 +15,7 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
   };
 }
 
+/** Guides index — cornerstone Q&A pages grouped by intent cluster. */
 export default function GuidesIndex({ params }: { params: { locale: string } }) {
   const locale = (isLocale(params.locale) ? params.locale : "en") as Locale;
   const d = getDictionary(locale);

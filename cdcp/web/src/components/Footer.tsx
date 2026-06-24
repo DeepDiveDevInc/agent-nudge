@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getDictionary, localePath, type Locale } from "@/lib/i18n";
 
+/** Site footer with patient/dentist links and official-source references. */
 export default function Footer({ locale }: { locale: Locale }) {
   const d = getDictionary(locale);
   const f = d.footer;

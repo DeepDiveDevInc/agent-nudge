@@ -11,8 +11,7 @@ import {
   type ResultKey,
   type StepId,
 } from "@/lib/eligibility";
-import type { Dictionary } from "@/lib/i18n";
-import type { Locale } from "@/lib/i18n";
+import { localePath, type Dictionary, type Locale } from "@/lib/i18n";
 
 type Who = "bot" | "user";
 interface Msg {
@@ -34,6 +33,7 @@ const INCOME_LABEL_KEY: Record<IncomeBand, keyof Dictionary["income"]> = {
   "90k_plus": "90plus",
 };
 
+/** Hybrid eligibility chat: deterministic interview/verdict with an optional LLM free-text layer. */
 export default function Chat({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const t = dict.chat;
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -131,9 +131,11 @@ export default function Chat({ dict, locale }: { dict: Dictionary; locale: Local
         return;
       }
       if (key === "not_yet_tax") {
+        // Route the reminder-email capture through the SAME consent gate as the lead flow
+        // (PIPEDA / Law 25): never collect a contact email without explicit consent.
         pushUser(dict.results.remindMe);
         await botSay([t.remindPrompt]);
-        setMode({ kind: "text", field: "email" });
+        setMode({ kind: "consent" });
         return;
       }
       // all eligible + over-income + has-insurance → route to a dentist
@@ -151,6 +153,9 @@ export default function Chat({ dict, locale }: { dict: Dictionary; locale: Local
       if (!value) return;
 
       if (mode.kind === "text" && mode.field === "city") {
+        // TODO(next phase): capture postal code (not free-text city) + eligibility result + consent
+        // metadata and POST to a lead endpoint/CRM. Intentionally a no-op prototype for now — see
+        // cdcp/web/README.md "Production TODO".
         pushUser(value);
         setDraft("");
         await botSay([t.cityAck.replace("{city}", escapeHtml(value)), t.consentAsk]);
@@ -158,7 +163,11 @@ export default function Chat({ dict, locale }: { dict: Dictionary; locale: Local
         return;
       }
       if (mode.kind === "text" && mode.field === "email") {
-        if (!value.includes("@")) return;
+        if (!isValidEmail(value)) {
+          // Give feedback instead of silently doing nothing; keep the draft so they can fix it.
+          await botSay([emailInvalidHint(locale)]);
+          return;
+        }
         pushUser(value);
         setDraft("");
         await botSay(t.done);
@@ -278,7 +287,7 @@ export default function Chat({ dict, locale }: { dict: Dictionary; locale: Local
               <input type="checkbox" checked={consentChecked} onChange={(e) => setConsentChecked(e.target.checked)} />
               <span>
                 {dict.consent.checkbox}{" "}
-                <a href={`/${locale}/privacy`} target="_blank" rel="noopener">
+                <a href={localePath(locale, "/privacy")} target="_blank" rel="noopener">
                   {dict.consent.privacyLink}
                 </a>
               </span>
@@ -409,6 +418,17 @@ function ctaLabel(key: ResultKey, dict: Dictionary): string {
 
 function verdictClass(key: ResultKey): string {
   return key.startsWith("eligible") ? "verdict-eligible" : "verdict-no";
+}
+
+/** Pragmatic email check — stricter than `includes("@")` without over-rejecting valid addresses. */
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function emailInvalidHint(locale: Locale): string {
+  return locale === "fr"
+    ? "Hmm, cette adresse courriel ne semble pas valide — pouvez-vous la vérifier ?"
+    : "Hmm, that doesn't look like a valid email — mind double-checking it?";
 }
 
 function fallbackHint(locale: Locale): string {

@@ -39,6 +39,7 @@ const FR = {
   ],
 };
 
+/** Privacy policy (template — PIPEDA / Quebec Law 25 oriented; needs legal review before launch). */
 export default function PrivacyPage({ params }: { params: { locale: string } }) {
   const locale = (isLocale(params.locale) ? params.locale : "en") as Locale;
   const c = locale === "fr" ? FR : EN;

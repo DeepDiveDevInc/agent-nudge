@@ -5,7 +5,7 @@ import JsonLd from "@/components/JsonLd";
 import { getDictionary, localePath, isLocale, LOCALES, HREFLANG, type Locale } from "@/lib/i18n";
 import { GUIDES, getGuide, getGuideContent, CLUSTER_LABELS } from "@/lib/content";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://cdcpguide.ca";
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://cdcpguide.ca").replace(/\/+$/, "");
 
 export function generateStaticParams() {
   return LOCALES.flatMap((locale) => GUIDES.map((g) => ({ locale, slug: g.slug })));
@@ -30,6 +30,7 @@ export function generateMetadata({ params }: { params: { locale: string; slug: s
   };
 }
 
+/** Single guide page: answer box, eligibility CTA, body, related links, and QAPage/Article JSON-LD. */
 export default function GuidePage({ params }: { params: { locale: string; slug: string } }) {
   const locale = (isLocale(params.locale) ? params.locale : "en") as Locale;
   const d = getDictionary(locale);
@@ -106,7 +107,10 @@ export default function GuidePage({ params }: { params: { locale: string; slug: 
         </Link>
       </div>
 
-      <div className="article-body" dangerouslySetInnerHTML={{ __html: content.bodyHtml }} />
+      <div
+        className="article-body"
+        dangerouslySetInnerHTML={{ __html: content.bodyHtml.replace(/\{locale\}/g, locale) }}
+      />
 
       {related.length > 0 && (
         <div className="related">

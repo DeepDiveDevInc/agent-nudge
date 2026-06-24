@@ -15,10 +15,12 @@ export type Dictionary = typeof en;
 
 const DICTIONARIES: Record<Locale, Dictionary> = { en, fr };
 
+/** Type guard: is `value` one of the supported locales? */
 export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value);
 }
 
+/** Returns the string dictionary for a locale. */
 export function getDictionary(locale: Locale): Dictionary {
   return DICTIONARIES[locale];
 }

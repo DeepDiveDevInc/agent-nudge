@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n";
 
+/** Dentist-side lead form (prototype — submission is not yet wired to a backend). */
 export default function DentistForm({ dict }: { dict: Dictionary }) {
   const d = dict.dentistSection;
   const [done, setDone] = useState(false);
@@ -13,6 +14,9 @@ export default function DentistForm({ dict }: { dict: Dictionary }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          // TODO(next phase): POST practice/name/email/interest to a lead endpoint + CRM, and only
+          // show the success state on a 2xx response (with error handling). Intentionally a no-op
+          // prototype for now — see cdcp/web/README.md "Production TODO".
           (e.target as HTMLFormElement).reset();
           setDone(true);
         }}

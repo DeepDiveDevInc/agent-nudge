@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getDictionary, localePath, type Locale } from "@/lib/i18n";
 
+/** Top disclosure bar + primary nav, with the EN/FR language toggle. */
 export default function Header({ locale }: { locale: Locale }) {
   const d = getDictionary(locale);
   const other: Locale = locale === "en" ? "fr" : "en";

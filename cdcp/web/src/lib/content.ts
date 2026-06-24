@@ -68,7 +68,7 @@ export const GUIDES: Guide[] = [
 <h2>What "no access to private insurance" means</h2>
 <p>You're considered to have access (and therefore not eligible) if you have dental coverage through an employer, a pension, a professional/group/student plan, or a plan you bought — yours <em>or a family member's</em> — even if you choose not to use it. One important exception: coverage through a <strong>government social program</strong> does not count as private insurance, so you may still qualify.</p>
 <h2>How much does it cover?</h2>
-<p>If you qualify, your share depends on income. Under $70,000 the plan pays 100% of eligible costs; $70,000–$79,999 it pays 60%; $80,000–$89,999 it pays 40%. See <a href="/en/guides/cdcp-income-thresholds-2026">income thresholds</a> for the full table.</p>`,
+<p>If you qualify, your share depends on income. Under $70,000 the plan pays 100% of eligible costs; $70,000–$79,999 it pays 60%; $80,000–$89,999 it pays 40%. See <a href="/{locale}/guides/cdcp-income-thresholds-2026">income thresholds</a> for the full table.</p>`,
       },
     },
   },
@@ -131,7 +131,7 @@ export const GUIDES: Guide[] = [
 <h2>What "adjusted family net income" means</h2>
 <p>It's the net income (line 23600 of the T1) of you plus your spouse or common-law partner, with CRA adjustments — not your gross salary. Because it's based on your tax return, filing is what makes the number official.</p>
 <h2>Important: the share is of <em>eligible</em> costs</h2>
-<p>These percentages apply to the CDCP's established fees, which can be lower than what a dentist actually charges. See <a href="/en/guides/does-cdcp-cover-100-percent">does CDCP really cover 100%?</a></p>`,
+<p>These percentages apply to the CDCP's established fees, which can be lower than what a dentist actually charges. See <a href="/{locale}/guides/does-cdcp-cover-100-percent">does CDCP really cover 100%?</a></p>`,
       },
     },
   },
@@ -162,7 +162,7 @@ export const GUIDES: Guide[] = [
 </ul>
 <h2>Two things to understand before you book</h2>
 <p><strong>1. Preauthorization.</strong> Some services need to be approved before they're covered; your dentist handles this through Sun Life.</p>
-<p><strong>2. Established fees.</strong> The plan pays based on CDCP established fees, which may differ from your dentist's charges — so confirm costs up front. See <a href="/en/guides/does-cdcp-cover-100-percent">does CDCP cover 100%?</a></p>
+<p><strong>2. Established fees.</strong> The plan pays based on CDCP established fees, which may differ from your dentist's charges — so confirm costs up front. See <a href="/{locale}/guides/does-cdcp-cover-100-percent">does CDCP cover 100%?</a></p>
 <p>Exact covered codes and amounts are set out in the Sun Life benefit grids, updated yearly.</p>`,
       },
     },
@@ -300,7 +300,7 @@ export const GUIDES: Guide[] = [
 <p>Eligibility uses <strong>adjusted family net income</strong> — your and your spouse/partner's combined net income. A modest pension can still keep you under the $90,000 threshold.</p>
 <h2>Pension coverage caveat</h2>
 <p>If you have dental coverage through a pension (including a government employer pension), that counts as access to private insurance and would make you ineligible. Coverage through a government social program does not count.</p>
-<p>Dentures, exams, cleanings and more are covered — see <a href="/en/guides/cdcp-dentures-coverage">denture coverage</a>.</p>`,
+<p>Dentures, exams, cleanings and more are covered — see <a href="/{locale}/guides/cdcp-dentures-coverage">denture coverage</a>.</p>`,
       },
     },
   },
@@ -387,6 +387,7 @@ export const GUIDES: Guide[] = [
   },
 ];
 
+/** Look up a guide by its slug. */
 export function getGuide(slug: string): Guide | undefined {
   return GUIDES.find((g) => g.slug === slug);
 }
@@ -397,6 +398,7 @@ export function getGuideContent(g: Guide, locale: Locale): { content: GuideConte
   return { content: g.content.en, fellBack: locale !== "en" };
 }
 
+/** All guides in a given intent cluster. */
 export function guidesByCluster(cluster: Cluster): Guide[] {
   return GUIDES.filter((g) => g.cluster === cluster);
 }
