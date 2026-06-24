@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { StepId } from "@/lib/eligibility";
+import { STEP_ORDER, type StepId } from "@/lib/eligibility";
 
 export const runtime = "nodejs";
 
@@ -46,10 +46,19 @@ function rateLimited(ip: string): boolean {
   return entry.count > RATE_LIMIT;
 }
 
+/**
+ * Best-effort client IP for the in-process rate limiter. Prefers `x-real-ip` (set by the hosting
+ * platform / reverse proxy), then the left-most `x-forwarded-for` hop. NOTE: these headers are
+ * client-spoofable unless the deployment's proxy strips and rewrites them — so a determined attacker
+ * can rotate them to evade the per-IP cap. This limiter is a basic abuse guard only; production must
+ * enforce limits with a trusted, platform-derived IP and a distributed store (see the note above).
+ */
 function clientIp(req: Request): string {
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
   const xff = req.headers.get("x-forwarded-for");
   if (xff) return xff.split(",")[0].trim();
-  return req.headers.get("x-real-ip") || "unknown";
+  return "unknown";
 }
 
 /** Reject obvious cross-site abuse: if an Origin is sent, its host must match the request host. */
@@ -117,8 +126,10 @@ export async function POST(req: Request) {
 
   const text = (body.text || "").slice(0, 600).trim();
   const step = body.step;
-  if (!text || !step) {
-    return Response.json({ type: "error", text: "Missing input." }, { status: 400 });
+  // Validate `step` is a real StepId before it reaches slotSpec() — otherwise an arbitrary string
+  // would fall through the switch and throw on `spec.description`.
+  if (!text || !step || !STEP_ORDER.includes(step)) {
+    return Response.json({ type: "error", text: "Missing or invalid input." }, { status: 400 });
   }
   const locale = body.locale === "fr" ? "fr" : "en";
   const spec = slotSpec(step);

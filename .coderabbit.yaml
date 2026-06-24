@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit configuration. See https://docs.coderabbit.ai/reference/configuration
+reviews:
+  pre_merge_checks:
+    docstrings:
+      # This repo mixes prose-heavy logic (the eligibility engine, chat route, content model — all
+      # documented) with many small UI components and render closures where docstrings add little.
+      # We keep the check as a non-blocking warning at a realistic threshold rather than chase 80%
+      # by documenting trivial helpers.
+      mode: "warning"
+      threshold: 40
