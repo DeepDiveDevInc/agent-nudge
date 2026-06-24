@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CDCP Guide — Do you qualify for the Canadian Dental Care Plan?</title>
+  <meta name="description" content="Find out in 60 seconds if you qualify for the Canadian Dental Care Plan (CDCP). Plain-language guide to eligibility, coverage and co-pays — then get connected to a dentist who accepts it." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Independence disclosure (E-E-A-T + avoids gov-impersonation) -->
+  <div class="topbar">
+    <span>🍁 Independent guide — <strong>not affiliated with the Government of Canada</strong>. We help you understand the plan and find a dentist.</span>
+    <div class="lang-toggle" aria-label="Language">
+      <button class="active" type="button">EN</button>
+      <button type="button" title="French mirror is part of the production build">FR</button>
+    </div>
+  </div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="logo">C</span>
+      <span>CDCP&nbsp;Guide</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#coverage">What's covered</a>
+      <a href="#dentists">For dentists</a>
+      <a class="btn btn-ghost" href="#chat">Check eligibility</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="pill">Now open to all ages · 2026 benefit year</div>
+        <h1>Do you qualify for the <span class="grad">Canadian Dental Care Plan?</span></h1>
+        <p class="lede">
+          The government covers dental care for millions of Canadians who earn under
+          <strong>$90,000</strong> and don't have private insurance — but their website makes it
+          hard to tell if that's <em>you</em>. We made it simple. Answer a few questions and find
+          out in about a minute.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#chat">Check my eligibility →</a>
+          <a class="btn btn-ghost" href="#coverage">See what's covered</a>
+        </div>
+        <ul class="trust-row">
+          <li>✓ Free &amp; anonymous</li>
+          <li>✓ Takes ~60 seconds</li>
+          <li>✓ Then find a dentist near you</li>
+        </ul>
+      </div>
+
+      <!-- CHAT WIDGET -->
+      <div class="chat-card" id="chat">
+        <div class="chat-head">
+          <div class="chat-head-left">
+            <span class="bot-avatar">🦷</span>
+            <div>
+              <div class="bot-name">Eligibility Assistant</div>
+              <div class="bot-status"><span class="dot"></span> Online · unofficial estimate</div>
+            </div>
+          </div>
+          <button class="restart" id="restart" title="Start over" type="button">↺</button>
+        </div>
+
+        <div class="chat-log" id="chatLog" aria-live="polite"></div>
+
+        <div class="chat-input-area" id="inputArea">
+          <!-- choice buttons / text input injected here -->
+        </div>
+
+        <div class="chat-disclaimer">
+          Unofficial estimate. Final eligibility is decided by Service Canada &amp; the CRA.
+          <a href="https://www.canada.ca/en/services/benefits/dental/dental-care-plan/apply.html" target="_blank" rel="noopener">Official site ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="band">
+      <h2 class="section-title">How CDCP Guide works</h2>
+      <div class="cards-3">
+        <div class="info-card">
+          <div class="ic">1</div>
+          <h3>Check eligibility</h3>
+          <p>Our assistant asks the four questions that actually decide eligibility — residency, tax
+          filing, income band, and insurance access — and gives you a clear yes/no with your co-pay
+          tier.</p>
+        </div>
+        <div class="info-card">
+          <div class="ic">2</div>
+          <h3>Understand your benefits</h3>
+          <p>We explain — in plain language — what's covered, what you'll actually pay, and the
+          "free isn't always free" gotcha the government site buries.</p>
+        </div>
+        <div class="info-card">
+          <div class="ic">3</div>
+          <h3>Find a dentist</h3>
+          <p>Eligible or not, we connect you with a dentist near you who's accepting new patients —
+          including ones who bill at the CDCP rate so you avoid surprise charges.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COVERAGE / NUMBERS -->
+    <section id="coverage" class="band band-alt">
+      <h2 class="section-title">What you'll pay — at a glance</h2>
+      <p class="section-sub">Your co-pay depends on your adjusted family net income. CDCP pays a
+      share of <em>eligible</em> costs:</p>
+      <div class="tier-table">
+        <div class="tier-row tier-head">
+          <span>Adjusted family net income</span><span>CDCP pays</span><span>You pay</span>
+        </div>
+        <div class="tier-row"><span>Under $70,000</span><span class="good">100%</span><span>$0</span></div>
+        <div class="tier-row"><span>$70,000 – $79,999</span><span>60%</span><span>40%</span></div>
+        <div class="tier-row"><span>$80,000 – $89,999</span><span>40%</span><span>60%</span></div>
+        <div class="tier-row tier-out"><span>$90,000 or more</span><span>—</span><span>Not eligible*</span></div>
+      </div>
+      <div class="callout">
+        <strong>⚠️ "Free" isn't always free.</strong> CDCP pays against its own established fees,
+        which can be lower than what some dentists charge. Even at the 0% co-pay tier you may owe the
+        difference. We help you find dentists who bill at the CDCP rate. <span class="muted">*Not
+        eligible for CDCP — but we'll still help you find care and alternatives.</span>
+      </div>
+    </section>
+
+    <!-- FOR DENTISTS -->
+    <section id="dentists" class="band dentist-band">
+      <div class="dentist-grid">
+        <div>
+          <div class="pill pill-dark">For dental practices</div>
+          <h2>Start accepting CDCP patients — without the headache</h2>
+          <p>The big corporate groups already cracked CDCP billing. Independent practices are
+          getting left behind. We help you enroll with Sun Life, understand the benefit grid, avoid
+          claim rejections — and get found by the patients we're educating every day.</p>
+          <ul class="check-list">
+            <li>1:1 CDCP readiness advisory call</li>
+            <li>Done-with-you Sun Life enrollment</li>
+            <li>"Accepting new CDCP patients" featured listing</li>
+            <li>Billing playbook &amp; yearly grid updates</li>
+          </ul>
+          <a class="btn btn-primary" href="#dentist-form">Book an advisory call →</a>
+          <p class="micro">cdcpbilling.com · fixed-fee advisory &amp; visibility — no per-patient fees.</p>
+        </div>
+        <div class="dentist-form-card" id="dentist-form">
+          <h3>Talk to us</h3>
+          <p class="micro">For dental practices only. We'll reach out within one business day.</p>
+          <form onsubmit="event.preventDefault(); this.reset(); document.getElementById('dform-done').hidden=false;">
+            <input type="text" placeholder="Practice name" required />
+            <input type="text" placeholder="Your name" required />
+            <input type="email" placeholder="Email" required />
+            <select required>
+              <option value="" disabled selected>I'm interested in…</option>
+              <option>Advisory call</option>
+              <option>Enrollment help</option>
+              <option>Patient directory listing</option>
+              <option>Everything</option>
+            </select>
+            <button class="btn btn-primary btn-block" type="submit">Request a call</button>
+            <p id="dform-done" class="form-done" hidden>✓ Thanks — prototype form (not yet wired to a CRM).</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO FAQ (also AEO structured content) -->
+    <section class="band band-alt">
+      <h2 class="section-title">Common questions</h2>
+      <div class="faq">
+        <details><summary>Who is eligible for the Canadian Dental Care Plan?</summary>
+          <p>You qualify if all four are true: you're a Canadian resident for tax purposes, you filed
+          last year's tax return, your adjusted family net income is under $90,000, and you don't
+          have access to private dental insurance.</p></details>
+        <details><summary>Can I get CDCP if I have insurance through work?</summary>
+          <p>Generally no. Having <em>access</em> to private/employer/pension/group dental insurance
+          disqualifies you — even if you decline it. Coverage through a government social program
+          does <strong>not</strong> count, so you may still qualify in that case.</p></details>
+        <details><summary>Does CDCP cover 100% of my dental bill?</summary>
+          <p>If your income is under $70,000, CDCP pays 100% of <em>eligible</em> costs. But it pays
+          against established fees that can be lower than what a dentist charges, so you may still owe
+          a difference. Ask your dentist if they bill at the CDCP rate.</p></details>
+        <details><summary>How do I apply?</summary>
+          <p>Apply through Service Canada online or by phone; the CRA validates your income. Once
+          approved, Sun Life sends a welcome package and your coverage start date.
+          <a href="https://www.canada.ca/en/services/benefits/dental/dental-care-plan/apply.html" target="_blank" rel="noopener">Official application ↗</a></p></details>
+        <details><summary>What if I don't qualify?</summary>
+          <p>You still have options — private dental insurance, dental discount/membership plans,
+          financing, or provincial programs — and we can connect you with a dentist regardless. Run
+          the eligibility check and we'll point you the right way.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-cols">
+      <div>
+        <div class="brand brand-foot"><span class="logo">C</span> CDCP Guide</div>
+        <p class="micro">An independent resource to help Canadians understand the Canadian Dental
+        Care Plan and find care. Not affiliated with the Government of Canada or Sun Life.</p>
+      </div>
+      <div>
+        <h4>Patients</h4>
+        <a href="#chat">Check eligibility</a>
+        <a href="#coverage">What's covered</a>
+        <a href="#how">Find a dentist</a>
+      </div>
+      <div>
+        <h4>Dentists</h4>
+        <a href="#dentists">Advisory &amp; billing help</a>
+        <a href="#dentist-form">Get listed</a>
+      </div>
+      <div>
+        <h4>Official sources</h4>
+        <a href="https://www.canada.ca/en/services/benefits/dental/dental-care-plan.html" target="_blank" rel="noopener">Canada.ca — CDCP ↗</a>
+        <a href="https://www.sunlife.ca/sl/cdcp/en/" target="_blank" rel="noopener">Sun Life — CDCP ↗</a>
+      </div>
+    </div>
+    <p class="footer-legal">Prototype · Information summarized from public sources as of June 2026.
+    Unofficial — verify eligibility at canada.ca. © CDCP Guide.</p>
+  </footer>
+
+  <!-- Structured data for AEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"Who is eligible for the Canadian Dental Care Plan?","acceptedAnswer":{"@type":"Answer","text":"You qualify if you are a Canadian resident for tax purposes, filed last year's tax return, have adjusted family net income under $90,000, and do not have access to private dental insurance."}},
+      {"@type":"Question","name":"Does CDCP cover 100% of my dental bill?","acceptedAnswer":{"@type":"Answer","text":"If your adjusted family net income is under $70,000, CDCP pays 100% of eligible costs, but it reimburses against established fees that may be lower than a dentist's charge, so you can still owe a difference."}}
+    ]
+  }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
